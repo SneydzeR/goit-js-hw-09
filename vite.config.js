@@ -2,6 +2,13 @@ import { defineConfig } from 'vite';
 import glob from 'glob';
 import injectHTML from 'vite-plugin-html-inject';
 import FullReload from 'vite-plugin-full-reload';
+// import Inspect from 'vite-plugin-inspect'
+
+// export default {
+//   plugins: [
+//     Inspect()
+//   ],
+// }
 
 export default defineConfig(({ command }) => {
   return {
