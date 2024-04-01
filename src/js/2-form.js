@@ -1,36 +1,46 @@
-const formSet = document.querySelector('.feedback-form');
-const inputinfo = formSet.elements.email;
-const areainfo = formSet.elements.message;
-let saveinfo = { email: '', message: '' };
+const form = document.querySelector('.feedback-form');
+const email = form.elements.email;
+const message = form.elements.message;
 
-const parsedinfo = JSON.parse(localStorage.getItem('feedback-form-state'));
-
-if (parsedinfo !== null) {
-  areainfo.value = parsedinfo.message;
-  inputinfo.value = parsedinfo.email;
-
-  saveinfo = parsedinfo;
+function inputForm() {
+  const emailField = email.value.trim();
+  const messageField = message.value.trim();
+  const inputFields = {
+    emailField,
+    messageField,
+  };
+  localStorage.setItem('feedback-form-state', JSON.stringify(inputFields));
+  return inputFields;
 }
 
-formSet.addEventListener('input', event => {
-  const email = event.currentTarget.elements.email.value;
-  const message = event.currentTarget.elements.message.value;
-
-  saveinfo.email = email.trim();
-  saveinfo.message = message.trim();
-  localStorage.setItem('feedback-form-state', JSON.stringify(saveinfo));
-});
-
-formSet.addEventListener('submit', evt => {
-  evt.preventDefault();
-
-  if (saveinfo.email.length == 0 || saveinfo.message.length == 0) {
-    console.log(`please fill all field`);
-  } else {
-    console.log(saveinfo);
-    localStorage.removeItem('feedback-form-state');
-    formSet.reset();
-    saveinfo.email = '';
-    saveinfo.message = '';
+function loadForm() {
+  const returnInfo = JSON.parse(localStorage.getItem('feedback-form-state'));
+  if (returnInfo !== null) {
+    email.value = returnInfo.emailField;
+    message.value = returnInfo.messageField;
+    return returnInfo;
   }
-});
+  return { email: '', message: '' };
+}
+
+function clearFormState() {
+  localStorage.removeItem('feedback-form-state');
+  form.reset();
+}
+
+function handleSubmit(event) {
+  event.preventDefault();
+  const emailValue = email.value.trim();
+  const messageValue = message.value.trim();
+  if (emailValue.length === 0 || messageValue.length === 0) {
+    alert('Please, input all fields');
+  } else {
+    const formInfo = inputForm();
+    console.log(formInfo);
+    clearFormState();
+  }
+}
+
+form.addEventListener('input', inputForm);
+form.addEventListener('submit', handleSubmit);
+const initialFormState = loadForm();
